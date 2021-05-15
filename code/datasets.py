@@ -115,10 +115,13 @@ class Pose_300W_LP(Dataset):
         # We get the pose in radians
         pose = utils.get_ypr_from_mat(mat_path)
         # And convert to degrees.
-        pitch = pose[0] * 180 / np.pi
-        yaw = pose[1] * 180 / np.pi
-        roll = pose[2] * 180 / np.pi
-
+        # if any(pose*180/np.pi <= -99) or any(pose*180/np.pi >= 99):
+        #     with open(os.path.join(self.data_dir, "image_garbage.txt"), 'a') as file:
+        #         file.write(self.X_train[index] + '\n')
+        #     file.close()
+        pitch = min(max(pose[0] * 180 / np.pi, -98.99), 98.99)
+        yaw = min(max(pose[1] * 180 / np.pi, -98.99), 98.99)
+        roll = min(max(pose[2] * 180 / np.pi, -98.99), 98.99)
         # Flip?
         rnd = np.random.random_sample()
         if rnd < 0.5:
@@ -138,6 +141,8 @@ class Pose_300W_LP(Dataset):
         # Get target tensors
         labels = binned_pose
         cont_labels = torch.FloatTensor([yaw, pitch, roll])
+        if any(labels < 0) or any(labels >= 66):
+            print("Out labels error {}, yxz: {}, labels: {}".format(self.X_train[index], [yaw, pitch, roll], labels))
 
         if self.transform is not None:
             img = self.transform(img)
@@ -185,9 +190,9 @@ class Pose_300W_LP_random_ds(Dataset):
 
         # We get the pose in radians
         pose = utils.get_ypr_from_mat(mat_path)
-        pitch = pose[0] * 180 / np.pi
-        yaw = pose[1] * 180 / np.pi
-        roll = pose[2] * 180 / np.pi
+        pitch = min(max(pose[0] * 180 / np.pi, -99), 99)
+        yaw = min(max(pose[1] * 180 / np.pi, -99), 99)
+        roll = min(max(pose[2] * 180 / np.pi, -99), 99)
 
         ds = 1 + np.random.randint(0,4) * 5
         original_size = img.size
@@ -213,6 +218,7 @@ class Pose_300W_LP_random_ds(Dataset):
         # Get target tensors
         labels = binned_pose
         cont_labels = torch.FloatTensor([yaw, pitch, roll])
+
 
         if self.transform is not None:
             img = self.transform(img)

@@ -1,6 +1,7 @@
 *.pyc
 *.npy
 data/*
-output/*
+output
 *.jpg
 *.png
+.idea
