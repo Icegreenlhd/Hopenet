@@ -47,10 +47,17 @@ python test_hopenet.py --data_dir PATH_OF_DATASET --filename_list LIST_FILE --da
 ```
 
 使用dlib人脸检测在视频上进行测试（头部中心会跳动）:
+
 ```bash
 python code/test_on_video_dlib.py --snapshot PATH_OF_SNAPSHOT --face_model PATH_OF_DLIB_MODEL --video PATH_OF_VIDEO --output_string STRING_TO_APPEND_TO_OUTPUT --n_frames N_OF_FRAMES_TO_PROCESS --fps FPS_OF_SOURCE_VIDEO
 ```
-Face bounding box annotations should be in Dockerface format (n_frame x_min y_min x_max y_max confidence).
+
+也可以在单张图片上进行测试,作为我们实验结果展示的补充手段,方便进行快速的查看:
+
+```shell
+python code/test_on_image.py --snapshot PATH_OF_SNAPSHOT --input PATH_OF_IMAGE --out_dir PATH_OF_OUTPUT_DIR
+```
+
 
 ### Pre-trained models
 
